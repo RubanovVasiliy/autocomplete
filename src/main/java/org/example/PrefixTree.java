@@ -15,7 +15,7 @@ public class PrefixTree {
         root = new Node();
     }
 
-    public void add(String key, String[] value) {
+    public void add(String key, long value) {
         var current = root;
         key = key.replaceAll("\"", "")
                 .toLowerCase();
@@ -24,11 +24,11 @@ public class PrefixTree {
             current = current.getChildren().computeIfAbsent(c, ch -> new Node());
         }
         current.setEndOfWord(true);
-        current.addValue(value);
+        current.addOffset(value);
     }
 
-    public List<String[]> search(String prefix) {
-        var results = new ArrayList<String[]>();
+    public ArrayList<Long> search(String prefix) {
+        var results = new ArrayList<Long>();
         var current = root;
         for (var c : prefix.toLowerCase().toCharArray()) {
             current = current.getChildren().get(c);
@@ -40,11 +40,9 @@ public class PrefixTree {
         return results;
     }
 
-    private void searchRecursively(Node node, List<String[]> results) {
+    private void searchRecursively(Node node, ArrayList<Long> results) {
         if (node.isEndOfWord()) {
-            for (var value : node.getValues()) {
-                results.add(value);
-            }
+                results.add(node.getOffset());
         }
         for (Node child : node.getChildren().values()) {
             searchRecursively(child, results);
@@ -53,12 +51,11 @@ public class PrefixTree {
 
     private static class Node {
         private boolean endOfWord;
-        private final List<String[]> values;
+        long offset = 0;
         private final Map<Character, Node> children;
 
         public Node() {
             endOfWord = false;
-            values = new ArrayList<>();
             children = new HashMap<>();
         }
 
@@ -70,12 +67,12 @@ public class PrefixTree {
             this.endOfWord = endOfWord;
         }
 
-        public List<String[]> getValues() {
-            return values;
+        public long getOffset() {
+            return offset;
         }
 
-        public void addValue(String[] value) {
-            values.add(value);
+        public void addOffset(long value) {
+            offset = value;
         }
 
         public Map<Character, Node> getChildren() {
