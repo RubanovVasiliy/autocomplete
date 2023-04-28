@@ -1,5 +1,7 @@
 package org.example;
 
+import org.filter.StringsFilter;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.*;
@@ -19,20 +21,27 @@ public class Main {
 
         var scanner = new Scanner(System.in);
 
-        System.out.println("Введите начало имени аэропорта:");
-        var input = scanner.nextLine();
+        String input = "1";
 
-        do {
+        while (!input.equals("!quit")) {
+            System.out.println("Введите фильтр");
+            var filterString = scanner.nextLine();
+
+            System.out.println("Введите начало имени аэропорта:");
+            input = scanner.nextLine();
+
+
             var m = System.nanoTime();
             var offsets = tree.search(input);
             var results = getLinesByOffsets(offsets, filename);
             var delta = (System.nanoTime() - m);
 
-            printSearchResult(results, delta);
+            if(!filterString.equals("")){
+                results = new StringsFilter().filter(results, filterString);
+            }
 
-            System.out.println("Введите начало имени аэропорта:");
-            input = scanner.nextLine();
-        } while (!input.equals("!quit"));
+            printSearchResult(results, delta);
+        }
 
         logMemoryStatistics();
     }
@@ -70,7 +79,7 @@ public class Main {
             String line = null;
             while ((line = file.readLine()) != null) {
                 pairList.add(new Pair<>(line, byteOffset));
-                byteOffset += line.getBytes().length + 1;
+                byteOffset += line.length() + 1;
                 file.seek(byteOffset);
             }
             file.close();
@@ -80,7 +89,7 @@ public class Main {
         return pairList;
     }
 
-    public static ArrayList<String> getLinesByOffsets(ArrayList<Long> offsets, String filename) {
+    public static List<String> getLinesByOffsets(ArrayList<Long> offsets, String filename) {
         var results = new ArrayList<String>();
         try {
             var file = new RandomAccessFile(filename, "r");
