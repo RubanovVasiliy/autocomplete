@@ -19,14 +19,17 @@ public class Main {
 
         var scanner = new Scanner(System.in);
 
-        String input = "1";
+        String input;
 
-        while (!input.equals("!quit")) {
+        while (true) {
             System.out.println("Введите фильтр");
             var filterString = scanner.nextLine();
+            if(filterString.equals("!quit")) break;
 
             System.out.println("Введите начало имени аэропорта:");
             input = scanner.nextLine();
+            if(input.equals("!quit")) break;
+
 
             var m = System.nanoTime();
             var offsets = tree.search(input);
@@ -40,6 +43,6 @@ public class Main {
             Printer.printSearchResult(results, delta);
         }
 
-        Printer.logMemoryStatistics();
+        //Printer.logMemoryStatistics();
     }
 }

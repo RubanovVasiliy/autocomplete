@@ -11,7 +11,7 @@ public class Printer {
         }
 
         System.out.print("Количество найденных строк: " + results.size());
-        System.out.println(" Время, затраченное на поиск: " + delta + " нс или " + delta / 1000000 + " мс");
+        System.out.println(" Время, затраченное на поиск:  " + delta / 1000000 + " мс");
         System.out.println();
     }
 
