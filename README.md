@@ -5,7 +5,7 @@ A Java console application (JDK 11) that allows you to quickly search for airpor
 The data for the program is taken from a file [airports.csv](https://disk.yandex.ru/i/g1riHSgEntfLYQ). It contains a table of airports with properties in CSV format. The name of the airport is column 2.
 
 
-Filters can be — equality relations: equal to `( = )`, not equal to `( <> )`, greater than `( > )`, less than `( < )`.
+Filters can be equality relations: equal to `( = )`, not equal to `( <> )`, greater than `( > )`, less than `( < )`.
 
 The filter is transmitted in the format:
 ```
