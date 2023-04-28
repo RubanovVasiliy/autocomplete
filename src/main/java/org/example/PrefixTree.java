@@ -2,9 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 
 
 public class PrefixTree {
@@ -42,7 +40,7 @@ public class PrefixTree {
 
     private void searchRecursively(Node node, ArrayList<Long> results) {
         if (node.isEndOfWord()) {
-                results.add(node.getOffset());
+            results.add(node.getOffset());
         }
         for (Node child : node.getChildren().values()) {
             searchRecursively(child, results);
