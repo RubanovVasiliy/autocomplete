@@ -21,26 +21,30 @@ public class Main {
 
         String input;
 
-        while (true) {
-            System.out.println("Введите фильтр");
-            var filterString = scanner.nextLine();
-            if(filterString.equals("!quit")) break;
+        try {
+            while (true) {
+                System.out.println("Введите фильтр");
+                var filterString = scanner.nextLine();
+                if(filterString.equals("!quit")) break;
 
-            System.out.println("Введите начало имени аэропорта:");
-            input = scanner.nextLine();
-            if(input.equals("!quit")) break;
+                System.out.println("Введите начало имени аэропорта:");
+                input = scanner.nextLine();
+                if(input.equals("!quit")) break;
 
 
-            var m = System.nanoTime();
-            var offsets = tree.search(input);
-            var results = Reader.getLinesByOffsets(offsets, filename);
-            var delta = (System.nanoTime() - m);
+                var m = System.nanoTime();
+                var offsets = tree.search(input);
+                var results = Reader.getLinesByOffsets(offsets, filename);
+                var delta = (System.nanoTime() - m);
 
-            if(!filterString.equals("")){
-                results = new StringsFilter().filter(results, filterString);
+                if(!filterString.equals("")){
+                    results = new StringsFilter().filter(results, filterString);
+                }
+
+                Printer.printSearchResult(results, delta);
             }
+        } catch (NoSuchElementException ignored){
 
-            Printer.printSearchResult(results, delta);
         }
 
         //Printer.logMemoryStatistics();
