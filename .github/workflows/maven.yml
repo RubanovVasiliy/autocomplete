@@ -25,4 +25,4 @@ jobs:
         java -jar app/airports-search-jar-with-dependencies.jar -Xmx7m > stdout.log 2> stderr.log &
         APP_PID=$!
         sleep 2s
-        ps -p $APP_PID -o rss=
+        top -b -n 1 -p $APP_PID | grep "java" | awk '{print $10}'
