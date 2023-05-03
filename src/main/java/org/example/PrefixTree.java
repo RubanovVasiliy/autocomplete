@@ -1,11 +1,23 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.*;
 
 public class PrefixTree {
+
+    private static final int ALPHABET_SIZE = 26;
+    public long nodeCount = 0;
+
+    private static class Node {
+        boolean endOfWord;
+        long offset;
+        Node[] children;
+
+        Node() {
+            endOfWord = false;
+            offset = 0;
+            children = new Node[ALPHABET_SIZE];
+        }
+    }
 
     private final Node root;
 
@@ -14,67 +26,54 @@ public class PrefixTree {
     }
 
     public void add(String key, long value) {
-        var current = root;
-        key = key.replaceAll("\"", "")
-                .toLowerCase();
+        key = key.toLowerCase().replaceAll("[^a-z]+", "");
+        char[] chars = key.toCharArray();
+        Node current = root;
 
-        for (var c : key.toCharArray()) {
-            current = current.getChildren().computeIfAbsent(c, ch -> new Node());
+        for (char c : chars) {
+            int index = c - 'a';
+            if (current.children[index] == null) {
+                current.children[index] = new Node();
+                nodeCount++;
+            }
+            current = current.children[index];
         }
-        current.setEndOfWord(true);
-        current.addOffset(value);
+        current.endOfWord = true;
+        current.offset = value;
     }
 
-    public ArrayList<Long> search(String prefix) {
-        var results = new ArrayList<Long>();
-        var current = root;
-        for (var c : prefix.toLowerCase().toCharArray()) {
-            current = current.getChildren().get(c);
-            if (current == null) {
-                return results;
+    public long[] search(String prefix) {
+        char[] chars = prefix.toCharArray();
+        Node current = root;
+
+        for (char c : chars) {
+            int index = c - 'a';
+            if (current.children[index] == null) {
+                return new long[0];
+            }
+            current = current.children[index];
+        }
+
+        Stack<Node> stack = new Stack<>();
+        stack.push(current);
+
+        List<Long> results = new ArrayList<>();
+        if (current.endOfWord) {
+            results.add(current.offset);
+        }
+
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            for (Node child : node.children) {
+                if (child != null) {
+                    if (child.endOfWord) {
+                        results.add(child.offset);
+                    }
+                    stack.push(child);
+                }
             }
         }
-        searchRecursively(current, results);
-        return results;
-    }
 
-    private void searchRecursively(Node node, ArrayList<Long> results) {
-        if (node.isEndOfWord()) {
-            results.add(node.getOffset());
-        }
-        for (Node child : node.getChildren().values()) {
-            searchRecursively(child, results);
-        }
-    }
-
-    private static class Node {
-        private boolean endOfWord;
-        long offset = 0;
-        private final Map<Character, Node> children;
-
-        public Node() {
-            endOfWord = false;
-            children = new HashMap<>();
-        }
-
-        public boolean isEndOfWord() {
-            return endOfWord;
-        }
-
-        public void setEndOfWord(boolean endOfWord) {
-            this.endOfWord = endOfWord;
-        }
-
-        public long getOffset() {
-            return offset;
-        }
-
-        public void addOffset(long value) {
-            offset = value;
-        }
-
-        public Map<Character, Node> getChildren() {
-            return children;
-        }
+        return results.stream().mapToLong(Long::longValue).toArray();
     }
 }
