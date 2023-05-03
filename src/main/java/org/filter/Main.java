@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        var filter = "column[1]>10 & (column[5]='GKA' || column[14]<>'OurAirports')";
+        /*var filter = "column[1]>10 & (column[5]='GKA' || column[14]<>'OurAirports')";
 
         var lines = new ArrayList<String>();
 
@@ -16,6 +16,6 @@ public class Main {
 
         for (var line : filteredLines) {
             System.out.println(line);
-        }
+        }*/
     }
 }

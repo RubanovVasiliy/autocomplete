@@ -4,13 +4,13 @@ import java.util.List;
 
 public class Printer {
 
-    public static void printSearchResult(List<String> results, long delta) {
+    public static void printSearchResult(String[] results, long delta) {
         for (var row : results) {
             System.out.print(row.split(",")[1].replaceAll("\"", ""));
             System.out.println("[" + row + "]");
         }
 
-        System.out.print("Количество найденных строк: " + results.size());
+        System.out.print("Количество найденных строк: " + results.length);
         System.out.println(" Время, затраченное на поиск:  " + delta / 1000000 + " мс");
         System.out.println();
     }

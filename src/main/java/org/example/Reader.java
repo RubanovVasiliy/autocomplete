@@ -27,16 +27,16 @@ public class Reader {
         return pairList;
     }
 
-    public static List<String> getLinesByOffsets(ArrayList<Long> offsets, String filename) {
-        var results = new ArrayList<String>();
+    public static String [] getLinesByOffsets(long [] offsets, String filename) {
+        var results = new String[offsets.length];
         try {
             var file = new RandomAccessFile(filename, "r");
 
             String line = null;
-            for (var offset : offsets) {
-                file.seek(offset);
+            for (var i = 0; i < offsets.length; i++) {
+                file.seek(offsets[i]);
                 line = file.readLine();
-                results.add(line);
+                results[i] = line;
             }
 
             file.close();

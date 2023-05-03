@@ -21,7 +21,7 @@ public class StringsFilter {
         this.minIndex = minIndex;
     }
 
-    public List<String> filter(List<String> lines, String filter) {
+    public String[] filter(String[] lines, String filter) {
         var errorListener = new ErrorListener();
 
         var lexer = new LogFilterLexer(CharStreams.fromString(filter));
@@ -37,19 +37,27 @@ public class StringsFilter {
 
         if (parser.getNumberOfSyntaxErrors() != 0) {
             System.out.println("Invalid filter string");
-            return new ArrayList<>();
+            return new String[0];
         }
 
         try {
             new ErrorCheckerVisitor(minIndex, maxIndex).visit(tree);
         } catch (Exception e) {
             System.out.println(e);
-            return new ArrayList<>();
+            return new String[0];
         }
 
         var visitor = new FilterVisitor();
         var predicate = visitor.visit(tree);
 
-        return lines.stream().filter(l -> predicate.test(l.split(","))).collect(Collectors.toList());
+
+        var result = new ArrayList<String>();
+        for (int i = 0; i < lines.length; i++) {
+            if (predicate.test(lines[i].split(","))) {
+                result.add(lines[i]);
+            }
+        }
+
+        return result.toArray(new String[0]);
     }
 }
